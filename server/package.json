@@ -1,0 +1,30 @@
+{
+  "name": "vwstang-nflrushing-server",
+  "version": "1.0.0",
+  "description": "NodeJS server portion of theScore the Rush interview challenge",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vwstang/nfl-rushing.git"
+  },
+  "keywords": [
+    "theScore",
+    "theRush"
+  ],
+  "author": "vwstang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vwstang/nfl-rushing/issues"
+  },
+  "homepage": "https://github.com/vwstang/nfl-rushing#readme",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "mongodb": "^3.6.10"
+  }
+}
