@@ -5,7 +5,9 @@ const getRushingStats = async () => {
     "RushingStats"
   );
 
-  const rushData = await rushCollection.find().toArray();
+  const rushData = await rushCollection
+    .find({}, { projection: { _id: 0 } })
+    .toArray();
 
   return rushData;
 };
