@@ -7,5 +7,5 @@ server.use("/api", api);
 
 const PORT = 3000;
 server.listen(PORT, () =>
-  console.info(`nfl-rushing server started at http://localhost:${PORT}`)
+  console.info(`nfl-rushing api server started at http://localhost:${PORT}`)
 );
