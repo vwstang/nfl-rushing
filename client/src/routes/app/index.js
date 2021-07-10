@@ -1,7 +1,7 @@
 import path from "path";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import StatsTable from "../../components/StatsTable";
+import App from "../../components/App";
 import pageCompiler, { scriptGenerator } from "../../utils/pageCompiler";
 
 const express = require("express");
@@ -9,12 +9,14 @@ const express = require("express");
 const app = express.Router();
 
 app.get("/", async (req, res) => {
-  const htmlFilePath = path.resolve(__dirname, "../../pages/rushing.hbs");
+  const htmlFilePath = path.resolve(__dirname, "../../pages/rushing.html");
 
-  const components = renderToString(<StatsTable />);
+  const components = renderToString(<App />);
   const scripts = scriptGenerator("rushing");
 
-  res.send("<div>Hello NFL fans</div>");
+  const html = await pageCompiler(htmlFilePath, components, scripts);
+
+  res.send(html);
 });
 
 export default app;

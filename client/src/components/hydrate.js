@@ -1,5 +1,5 @@
 import React from "react";
 import { hydrate } from "react-dom";
-import StatsTable from "./StatsTable";
+import App from "./App";
 
-hydrate(<StatsTable />, document.getElementById("root"));
+hydrate(<App />, document.getElementById("root"));

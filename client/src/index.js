@@ -1,4 +1,4 @@
-import app from "./routes/app";
+import routes from "./routes";
 
 const express = require("express");
 
@@ -6,7 +6,7 @@ const server = express();
 
 server.use(express.static("public"));
 
-server.use("/", app);
+server.use("/", routes);
 
 const PORT = 3100;
 server.listen(PORT, () =>

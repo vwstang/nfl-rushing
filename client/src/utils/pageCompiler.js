@@ -7,7 +7,7 @@ import hbs from "handlebars";
  * @returns {string} generated script tag
  */
 export const scriptGenerator = (scriptName) =>
-  `<script src="${scriptName}"></script>`;
+  `<script src="./${scriptName}.js"></script>`;
 
 /**
  * Compiles an HTML template
