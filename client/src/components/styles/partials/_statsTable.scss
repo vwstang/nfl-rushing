@@ -2,6 +2,9 @@
 
 $rushStatusCols: 16;
 $borderColor: 1px solid #242628;
+$sortOffset: 3px;
+$sortColor: #ffffff;
+$sortColorActive: #006dff;
 
 .table {
   &Heading {
@@ -69,6 +72,35 @@ $borderColor: 1px solid #242628;
     background: #1e1f21;
     font-weight: 700;
     padding: 4px;
+
+    &.sortable {
+      position: relative;
+
+      &.ascending::before {
+        color: $sortColorActive;
+      }
+      &.descending::after {
+        color: $sortColorActive;
+      }
+
+      &::before {
+        content: "\25B2";
+        position: absolute;
+        font-size: 1px;
+        top: calc(50% - 12px);
+        right: $sortOffset;
+        color: $sortColor;
+      }
+
+      &::after {
+        content: "\25BC";
+        position: absolute;
+        font-size: 1px;
+        top: 50%;
+        right: $sortOffset;
+        color: $sortColor;
+      }
+    }
   }
 
   &__item {

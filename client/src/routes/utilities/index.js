@@ -13,7 +13,7 @@ utilities.get("/rushingstats", async (req, res) => {
       "http://localhost:3000/api/stats/rushing",
       { headers }
     );
-    return res.send(response.data);
+    return res.send(response.data.slice(0, 50));
   } catch (error) {
     console.error("[routes.utilities.get.rushingstats]", error);
     return res.sendStatus(500);
