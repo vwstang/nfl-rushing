@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import StatsTable from "../StatsTable";
 
 const App = () => {
-  return (
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  return loading ? (
+    <></>
+  ) : (
     <>
-      <header></header>
-      <main>
+      <header className="rushHeader">
+        <div className="rushLogo">
+          the<span className="rushLogo--R">R</span>ush
+        </div>
+      </header>
+      <main className="rushMain">
         <StatsTable />
       </main>
     </>

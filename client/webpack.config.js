@@ -18,6 +18,17 @@ module.exports = {
           }
         },
         exclude: /node_modules/
+      },
+      {
+        test: /.s?css$/,
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "sass-loader",
+            options: { implementation: require("sass") }
+          }
+        ]
       }
     ]
   },

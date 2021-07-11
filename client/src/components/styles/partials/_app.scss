@@ -1,0 +1,33 @@
+.rush {
+  &Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e1f21;
+    padding: 24px;
+  }
+
+  &Logo {
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.4em;
+
+    &--R {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        height: 2px;
+        background: #ffbf00;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  &Main {
+    padding: 0 24px 24px;
+  }
+}
