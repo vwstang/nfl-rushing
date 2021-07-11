@@ -1,3 +1,8 @@
+.wrapper {
+  margin: 0 auto;
+  max-width: $maxPageWidth;
+}
+
 .rush {
   &Header {
     display: flex;
@@ -28,6 +33,8 @@
   }
 
   &Main {
+    margin: 0 auto;
     padding: 0 24px 24px;
+    max-width: $maxPageWidth;
   }
 }

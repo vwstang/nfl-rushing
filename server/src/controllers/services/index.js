@@ -1,12 +1,18 @@
 const connect = require("../db");
 
-const getRushingStats = async () => {
+/**
+ *
+ * @param {Object} qryParams
+ * @param {string} qryParams.name - Player name to filter data by
+ * @returns
+ */
+const getRushingStats = async (qryParams) => {
   const rushCollection = (await connect("ts-nfl-rushing")).collection(
     "RushingStats"
   );
 
   const rushData = await rushCollection
-    .find({}, { projection: { _id: 0 } })
+    .find(qryParams, { projection: { _id: 0 } })
     .toArray();
 
   return rushData;

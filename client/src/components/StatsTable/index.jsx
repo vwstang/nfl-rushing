@@ -26,17 +26,6 @@ const COL_ORDER = [
   { code: "FUM", desc: "Rushing fumbles" }
 ];
 
-const runFilter = (e, setState) => {
-  e.preventDefault();
-  setState.setProcessing(true);
-  const headers = { "r-filter-name": e.target.value };
-  (async () => {
-    const response = await axios.get("/utilities/rushingstats", { headers });
-    setState.setRushingStats(response.data);
-    setState.setProcessing(false);
-  })();
-};
-
 const downloadCSV = () => {
   // TODO: This should take the current filter and sort states, query DB without pagination, and download as CSV
 };
@@ -47,6 +36,19 @@ const StatsTable = (props) => {
   const [processing, setProcessing] = useState(false); // Sort or filter processing
   const [errMsg, setErrMsg] = useState(null);
   const [filterName, setFilterName] = useState("");
+
+  const runFilter = (e) => {
+    e.preventDefault();
+    setProcessing(true);
+    const headers = {
+      name: filterName
+    };
+    (async () => {
+      const response = await axios.get("/utilities/rushingstats", { headers });
+      setRushingStats(response.data);
+      setProcessing(false);
+    })();
+  };
 
   useEffect(() => {
     (async () => {
@@ -67,49 +69,51 @@ const StatsTable = (props) => {
     return <div>Loading rushing statistics...</div>;
   } else if (errMsg) {
     return <div>{errMsg}</div>;
-  } else if (rushingStats.length === 0) {
-    return <div>No statistics were found!</div>;
   } else {
     return (
       <>
         <div className="tableHeading">
           <h1 className="tableHeading--title">NFL Rushing Statistics</h1>
-          <form
-            className="tableFilterForm"
-            onSubmit={(e) => runFilter(e, { setProcessing, setRushingStats })}
-          >
+          <form className="tableFilterForm" onSubmit={runFilter}>
             <input
               className="tableFilterInput"
               type="text"
-              placeholder="Filter by Name"
+              placeholder="Filter by Player"
               value={filterName}
               onChange={(e) => setFilterName(e.target.value)}
             />
+            <button className="tableButton" type="submit">
+              Filter
+            </button>
           </form>
           <button
-            className="tableDownload"
+            className="tableButton"
             type="button"
             onClick={() => downloadCSV(rushingStats)}
           >
             Download CSV
           </button>
         </div>
-        <div className={`rushStats${processing ? " loading" : ""}`}>
-          <TableHeader colOrder={COL_ORDER} />
-          {rushingStats.map((playerStat, idx) => {
-            const rKey = `${playerStat.Player.replace(/\s/g, "")}-${
-              playerStat.Team
-            }`;
-            return (
-              <TableRow
-                key={rKey}
-                playerStat={playerStat}
-                colOrder={COL_ORDER}
-                altBG={idx % 2 === 1}
-              />
-            );
-          })}
-        </div>
+        {rushingStats.length === 0 ? (
+          <div>No statistics were found!</div>
+        ) : (
+          <div className={`rushStats${processing ? " loading" : ""}`}>
+            <TableHeader colOrder={COL_ORDER} />
+            {rushingStats.map((playerStat, idx) => {
+              const rKey = `${playerStat.Player.replace(/\s/g, "")}-${
+                playerStat.Team
+              }`;
+              return (
+                <TableRow
+                  key={rKey}
+                  playerStat={playerStat}
+                  colOrder={COL_ORDER}
+                  altBG={idx % 2 === 1}
+                />
+              );
+            })}
+          </div>
+        )}
       </>
     );
   }

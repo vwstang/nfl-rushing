@@ -12,8 +12,10 @@ const App = () => {
   ) : (
     <>
       <header className="rushHeader">
-        <div className="rushLogo">
-          the<span className="rushLogo--R">R</span>ush
+        <div className="wrapper">
+          <div className="rushLogo">
+            the<span className="rushLogo--R">R</span>ush
+          </div>
         </div>
       </header>
       <main className="rushMain">
