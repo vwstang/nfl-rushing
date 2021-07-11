@@ -101,7 +101,10 @@ const StatsTable = (props) => {
     e.preventDefault();
     setProcessing(true);
     const headers = {
-      name: filterName
+      name: filterName,
+      ...(sortYds !== NONE && { yds: sortYds }),
+      ...(sortLng !== NONE && { lng: sortLng }),
+      ...(sortTD !== NONE && { td: sortTD })
     };
     (async () => {
       const response = await axios.get("/utilities/rushingstats", { headers });
