@@ -7,7 +7,7 @@ stats.get("/rushing", async (req, res) => {
 
   const resData = await getRushingStats();
 
-  return res.send(resData.slice(0, 20));
+  return res.send(resData);
 });
 
 module.exports = stats;
