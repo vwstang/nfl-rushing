@@ -1,4 +1,10 @@
 const express = require("express");
+const { ASCENDING, DESCENDING } = require("../../../../constants");
+
+const MONGO_SORT = {
+  [ASCENDING]: 1,
+  [DESCENDING]: -1
+};
 
 const stats = express.Router();
 
@@ -11,7 +17,19 @@ stats.get("/rushing", async (req, res) => {
     })
   };
 
-  const resData = await getRushingStats(queryParams);
+  const sortParams = {
+    ...(req.headers["r-sort-yds"] && {
+      Yds: MONGO_SORT[req.headers["r-sort-yds"]]
+    }),
+    ...(req.headers["r-sort-lng"] && {
+      Lng: MONGO_SORT[req.headers["r-sort-lng"]]
+    }),
+    ...(req.headers["r-sort-td"] && {
+      TD: MONGO_SORT[req.headers["r-sort-td"]]
+    })
+  };
+
+  const resData = await getRushingStats(queryParams, sortParams);
 
   return res.send(resData);
 });

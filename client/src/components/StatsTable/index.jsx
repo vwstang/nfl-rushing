@@ -15,10 +15,6 @@ const nextSortState = (currState) => {
   }
 };
 
-const downloadCSV = () => {
-  // TODO: This should take the current filter and sort states, query DB without pagination, and download as CSV
-};
-
 const renderHeaderCol = (column, idx, arr) => {
   const rKey = `Header-${column.code}`;
 
@@ -32,6 +28,7 @@ const renderHeaderCol = (column, idx, arr) => {
   const headerProps = {
     key: rKey,
     code: column.code,
+    title: column.desc,
     classes
   };
 
@@ -97,8 +94,11 @@ const StatsTable = (props) => {
     { code: "FUM", desc: "Rushing fumbles" }
   ];
 
-  const runFilter = (e) => {
-    e.preventDefault();
+  const downloadData = () => {
+    // TODO: Send request to BFF to download data from server
+  };
+
+  const getData = async () => {
     setProcessing(true);
     const headers = {
       name: filterName,
@@ -106,27 +106,29 @@ const StatsTable = (props) => {
       ...(sortLng !== NONE && { lng: sortLng }),
       ...(sortTD !== NONE && { td: sortTD })
     };
-    (async () => {
-      const response = await axios.get("/utilities/rushingstats", { headers });
+    try {
+      const response = await axios.get("/utilities/rushingstats", {
+        headers
+      });
       setRushingStats(response.data);
       setProcessing(false);
-    })();
+    } catch (error) {
+      setErrMsg(
+        "There was an error loading the rushing statistics. Please try again later."
+      );
+    }
   };
 
   useEffect(() => {
     (async () => {
-      try {
-        const response = await axios.get("/utilities/rushingstats");
-        setRushingStats(response.data);
-      } catch (error) {
-        setErrMsg(
-          "There was an error loading the rushing statistics. Please try again later."
-        );
-      } finally {
-        setLoading(false);
-      }
+      await getData();
+      setLoading(false);
     })();
   }, []);
+
+  useEffect(() => {
+    getData();
+  }, [sortYds, sortLng, sortTD]);
 
   if (loading) {
     return <div>Loading rushing statistics...</div>;
@@ -137,7 +139,13 @@ const StatsTable = (props) => {
       <>
         <div className="tableHeading">
           <h1 className="tableHeading--title">NFL Rushing Statistics</h1>
-          <form className="tableFilterForm" onSubmit={runFilter}>
+          <form
+            className="tableFilterForm"
+            onSubmit={(e) => {
+              e.preventDefault();
+              getData();
+            }}
+          >
             <input
               className="tableFilterInput"
               type="text"
@@ -149,11 +157,7 @@ const StatsTable = (props) => {
               Filter
             </button>
           </form>
-          <button
-            className="tableButton"
-            type="button"
-            onClick={() => downloadCSV(rushingStats)}
-          >
+          <button className="tableButton" type="button" onClick={downloadData}>
             Download CSV
           </button>
         </div>
@@ -163,9 +167,7 @@ const StatsTable = (props) => {
           <div className={`rushStats${processing ? " loading" : ""}`}>
             {COL_ORDER.map(renderHeaderCol)}
             {rushingStats.map((playerStat, idx) => {
-              const rKey = `${playerStat.Player.replace(/\s/g, "")}-${
-                playerStat.Team
-              }`;
+              const rKey = `${playerStat.Player.replace(/\s/g, "")}-${idx}`;
               return (
                 <TableRow
                   key={rKey}

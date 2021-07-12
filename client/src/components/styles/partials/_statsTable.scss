@@ -63,6 +63,7 @@ $sortColorActive: #006dff;
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 99;
     background-color: #00000050;
   }
 
@@ -72,9 +73,11 @@ $sortColorActive: #006dff;
     background: #1e1f21;
     font-weight: 700;
     padding: 4px;
+    user-select: none;
 
     &.sortable {
       position: relative;
+      cursor: pointer;
 
       &.ascending::before {
         color: $sortColorActive;

@@ -1,0 +1,5 @@
+module.exports = {
+  ASCENDING: "ASCENDING",
+  DESCENDING: "DESCENDING",
+  NONE: "NONE"
+};
