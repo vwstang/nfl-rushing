@@ -62,4 +62,41 @@ If you have any questions regarding requirements, do not hesitate to email your 
 
 ### Installation and running this solution
 
-... TODO
+#### Requirements
+
+- NodeJS v14.17.1+
+- Docker Engine v18.06.0+
+
+#### Start the DB
+
+Ensure docker engine is running first. Change directory into db folder and spin up db with docker compose in the background:
+
+```bash
+cd db
+docker-compose up -d
+```
+
+#### Start the API server
+
+Change directory from project root to server folder, install dependencies, and then start up the node server:
+
+```bash
+cd server
+npm install
+npm start
+```
+
+Once the node server is up, the API server can be accessed at http://localhost:3000.
+
+#### Start the Client server
+
+Change directory from project root to client folder, install dependencies, run build script, and then start up the node server:
+
+```bash
+cd client
+npm install
+npm run build
+npm start
+```
+
+Once the node server is up, the web app can then be accessed at http://localhost:3100.
