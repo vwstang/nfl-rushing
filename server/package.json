@@ -1,7 +1,7 @@
 {
   "name": "vwstang-nflrushing-server",
   "version": "1.0.0",
-  "description": "NodeJS server portion of theScore the Rush interview challenge",
+  "description": "API server for theScore 'the Rush' interview challenge",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vwstang/nfl-rushing.git"

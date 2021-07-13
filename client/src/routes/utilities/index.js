@@ -8,9 +8,11 @@ utilities.get("/rushingstats", async (req, res) => {
   try {
     const headers = {
       ...(req.headers.name && { "r-filter-name": req.headers.name }),
-      ...(req.headers.yds && { "r-sort-yds": req.headers.yds }),
-      ...(req.headers.lng && { "r-sort-lng": req.headers.lng }),
-      ...(req.headers.td && { "r-sort-td": req.headers.td }),
+      ...(req.headers.sortby && { "r-sort-by": req.headers.sortby }),
+      ...(req.headers.sortorder && { "r-sort-order": req.headers.sortorder }),
+      // ...(req.headers.yds && { "r-sort-yds": req.headers.yds }),
+      // ...(req.headers.lng && { "r-sort-lng": req.headers.lng }),
+      // ...(req.headers.td && { "r-sort-td": req.headers.td }),
       ...(req.headers.page && { "r-page": req.headers.page }),
       ...(req.headers.countppg && { "r-page-count": req.headers.countppg })
     };
@@ -29,9 +31,11 @@ utilities.get("/rushingstats/getcsv", async (req, res) => {
   try {
     const headers = {
       ...(req.headers.name && { "r-filter-name": req.headers.name }),
-      ...(req.headers.yds && { "r-sort-yds": req.headers.yds }),
-      ...(req.headers.lng && { "r-sort-lng": req.headers.lng }),
-      ...(req.headers.td && { "r-sort-td": req.headers.td })
+      ...(req.headers.sortby && { "r-sort-by": req.headers.sortby }),
+      ...(req.headers.sortorder && { "r-sort-order": req.headers.sortorder })
+      // ...(req.headers.yds && { "r-sort-yds": req.headers.yds }),
+      // ...(req.headers.lng && { "r-sort-lng": req.headers.lng }),
+      // ...(req.headers.td && { "r-sort-td": req.headers.td })
     };
     const response = await axios.get(
       "http://localhost:3000/api/stats/rushing/csvdata",

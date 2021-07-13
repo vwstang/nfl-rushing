@@ -21,4 +21,4 @@ const jsonArrayToCSV = (jsonArr) => {
   return result;
 };
 
-module.exports = { jsonArrayToCSV };
+module.exports = jsonArrayToCSV;

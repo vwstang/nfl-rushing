@@ -1,14 +1,7 @@
 {
   "name": "vwstang-nflrushing-client",
   "version": "1.0.0",
-  "description": "Front-end portion of theScore the Rush interview challenge",
-  "main": "src/index.js",
-  "scripts": {
-    "build": "webpack -p",
-    "start": "node src/index.js",
-    "webpack": "webpack -w",
-    "dev": "nodemon --exec babel-node src/index.js"
-  },
+  "description": "Webapp server for theScore 'the Rush' interview challenge",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vwstang/nfl-rushing.git"
@@ -23,6 +16,13 @@
     "url": "https://github.com/vwstang/nfl-rushing/issues"
   },
   "homepage": "https://github.com/vwstang/nfl-rushing#readme",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "babel-node src/index.js",
+    "webpack": "webpack -w",
+    "dev": "nodemon --exec babel-node src/index.js"
+  },
   "dependencies": {
     "@babel/runtime": "^7.14.6",
     "axios": "^0.21.1",

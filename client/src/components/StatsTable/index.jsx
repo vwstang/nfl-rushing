@@ -85,7 +85,8 @@ const StatsTable = (props) => {
     const headers = {
       name: filterName,
       ...(sorting.order !== NONE && {
-        [sorting.by.toLowerCase()]: sorting.order
+        sortby: sorting.by,
+        sortorder: sorting.order
       })
     };
     try {
@@ -115,7 +116,8 @@ const StatsTable = (props) => {
     const headers = {
       name: filterName,
       ...(sorting.order !== NONE && {
-        [sorting.by.toLowerCase()]: sorting.order
+        sortby: sorting.by,
+        sortorder: sorting.order
       }),
       countppg: countPerPage,
       page
