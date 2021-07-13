@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import TableHeader from "./components/TableHeader";
 import TableRow from "./components/TableRow";
@@ -15,76 +15,61 @@ const nextSortState = (currState) => {
   }
 };
 
-const renderHeaderCol = (column, idx, arr) => {
-  const rKey = `Header-${column.code}`;
-
-  let classes = "rushStats__header";
-  if (idx === 0) {
-    classes += " rushStats__header--name";
-  } else if (idx === arr.length - 1) {
-    classes += " rushStats__header--last";
-  }
-
-  const headerProps = {
-    key: rKey,
-    code: column.code,
-    title: column.desc,
-    classes
-  };
-
-  if (column.sortable) {
-    headerProps.classes += " sortable";
-    headerProps.sorting = column.sortable.state;
-    headerProps.setSorting = column.sortable.setState;
-    if (column.sortable.state !== NONE) {
-      headerProps.classes += ` ${column.sortable.state.toLowerCase()}`;
-    }
-  }
-
-  return <TableHeader {...headerProps} />;
-};
-
 const StatsTable = (props) => {
   const [rushingStats, setRushingStats] = useState([]);
   const [loading, setLoading] = useState(true); // Initial page load
   const [processing, setProcessing] = useState(false); // Sort or filter processing
   const [errMsg, setErrMsg] = useState(null);
   const [filterName, setFilterName] = useState("");
-  const [sortYds, setSortYds] = useState(NONE);
-  const [sortLng, setSortLng] = useState(NONE);
-  const [sortTD, setSortTD] = useState(NONE);
+  const [sorting, setSorting] = useState({ by: "", order: NONE });
+  const [countPerPage, setCountPerPage] = useState(20);
+  const [page, setPage] = useState(1);
+  const [targetPage, setTargetPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+  const dlRef = useRef(null);
 
-  // Following the order of the stats per the Challenge Background in the readme
   const COL_ORDER = [
     { code: "Player", desc: "Player's name" },
     { code: "Team", desc: "Player's team abbreviation" },
     { code: "Pos", desc: "Player's position" },
-    { code: "Att/G", desc: "Rushing attempts per game average" },
     { code: "Att", desc: "Rushing attempts" },
     {
       code: "Yds",
       desc: "Total rushing yards",
       sortable: {
-        state: sortYds,
-        setState: () => setSortYds(nextSortState(sortYds))
+        setState: () =>
+          setSorting({
+            by: "Yds",
+            order:
+              sorting.by === "Yds" ? nextSortState(sorting.order) : ASCENDING
+          })
       }
     },
+    { code: "Att/G", desc: "Rushing attempts per game average" },
     { code: "Avg", desc: "Rushing average yards per attempt" },
     { code: "Yds/G", desc: "Rushing yards per game" },
     {
       code: "TD",
       desc: "Total rushing touchdowns",
       sortable: {
-        state: sortTD,
-        setState: () => setSortTD(nextSortState(sortTD))
+        setState: () =>
+          setSorting({
+            by: "TD",
+            order:
+              sorting.by === "TD" ? nextSortState(sorting.order) : ASCENDING
+          })
       }
     },
     {
       code: "Lng",
       desc: "Longest rush -- a T represents a touchdown occurred",
       sortable: {
-        state: sortLng,
-        setState: () => setSortLng(nextSortState(sortLng))
+        setState: () =>
+          setSorting({
+            by: "Lng",
+            order:
+              sorting.by === "Lng" ? nextSortState(sorting.order) : ASCENDING
+          })
       }
     },
     { code: "1st", desc: "Rushing first downs" },
@@ -94,23 +79,53 @@ const StatsTable = (props) => {
     { code: "FUM", desc: "Rushing fumbles" }
   ];
 
-  const downloadData = () => {
-    // TODO: Send request to BFF to download data from server
+  const downloadData = async () => {
+    setProcessing(true);
+    const headers = {
+      name: filterName,
+      ...(sorting.order !== NONE && {
+        [sorting.by.toLowerCase()]: sorting.order
+      })
+    };
+    try {
+      // Fire and forget? Or loading state on download button
+      const response = await axios.get("/utilities/rushingstats/getcsv", {
+        headers
+      });
+      const dataBlob = new Blob([response.data], {
+        type: response.headers["Content-Type"]
+      });
+      dlRef.current.href = URL.createObjectURL(dataBlob);
+      dlRef.current.download = "rushing.csv";
+      dlRef.current.click();
+      dlRef.current.href = "#";
+      dlRef.current.download = null;
+    } catch (error) {
+      console.error(
+        "An error occurred while attempting to download CSV. Please try again later."
+      );
+      console.error(error);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const getData = async () => {
     setProcessing(true);
     const headers = {
       name: filterName,
-      ...(sortYds !== NONE && { yds: sortYds }),
-      ...(sortLng !== NONE && { lng: sortLng }),
-      ...(sortTD !== NONE && { td: sortTD })
+      ...(sorting.order !== NONE && {
+        [sorting.by.toLowerCase()]: sorting.order
+      }),
+      countppg: countPerPage,
+      page
     };
     try {
       const response = await axios.get("/utilities/rushingstats", {
         headers
       });
-      setRushingStats(response.data);
+      setRushingStats(response.data.recordset);
+      setPageCount(response.data.totalpages);
       setProcessing(false);
     } catch (error) {
       setErrMsg(
@@ -128,7 +143,27 @@ const StatsTable = (props) => {
 
   useEffect(() => {
     getData();
-  }, [sortYds, sortLng, sortTD]);
+  }, [sorting, countPerPage, page]);
+
+  // useEffect(() => {
+  //   if (pageCount < page) {
+  //     setPage(pageCount);
+  //     setTargetPage(pageCount);
+  //   } else {
+  //     setTargetPage(page);
+  //   }
+  // }, [page, countPerPage]);
+  useEffect(() => {
+    if (page !== targetPage) {
+      setTargetPage(page);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    if (!loading && page > pageCount) {
+      setPage(pageCount);
+    }
+  }, [pageCount]);
 
   if (loading) {
     return <div>Loading rushing statistics...</div>;
@@ -137,47 +172,134 @@ const StatsTable = (props) => {
   } else {
     return (
       <>
+        <h1 className="title">NFL Rushing Statistics</h1>
         <div className="tableHeading">
-          <h1 className="tableHeading--title">NFL Rushing Statistics</h1>
-          <form
-            className="tableFilterForm"
-            onSubmit={(e) => {
-              e.preventDefault();
-              getData();
-            }}
-          >
-            <input
-              className="tableFilterInput"
-              type="text"
-              placeholder="Filter by Player"
-              value={filterName}
-              onChange={(e) => setFilterName(e.target.value)}
-            />
-            <button className="tableButton" type="submit">
-              Filter
+          <div className="tablePaginator">
+            <div>
+              <label htmlFor="countPerPage">Records per page: </label>
+              <select
+                id="countPerPage"
+                className="tableCPPG"
+                value={countPerPage}
+                onChange={(e) => setCountPerPage(e.target.value)}
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+            <div>
+              <button
+                id="pageDecrementer"
+                className="paginator__changer"
+                type="button"
+                onClick={() => setPage(Math.max(1, page - 1))}
+              >
+                &#9664;
+              </button>
+              <input
+                id="pageIndicator"
+                className="paginator__indicator"
+                type="number"
+                value={targetPage}
+                onChange={(e) => setTargetPage(e.target.value)}
+                onBlur={() => {
+                  if (targetPage < 1) {
+                    setPage(1);
+                  } else if (targetPage > pageCount) {
+                    setPage(pageCount);
+                  } else if (targetPage !== page) {
+                    setPage(targetPage);
+                  }
+                }}
+              />
+              <span>{` of ${pageCount} pages`}</span>
+              <button
+                id="pageIncrementer"
+                className="paginator__changer"
+                type="button"
+                onClick={() => setPage(Math.min(pageCount, page + 1))}
+              >
+                &#9654;
+              </button>
+            </div>
+          </div>
+          <div className="tableActions">
+            <form
+              className="tableFilterForm"
+              onSubmit={(e) => {
+                e.preventDefault();
+                getData();
+              }}
+            >
+              <input
+                className="tableFilterInput"
+                type="text"
+                placeholder="Filter by Player"
+                value={filterName}
+                onChange={(e) => setFilterName(e.target.value)}
+              />
+              <button className="tableButton" type="submit">
+                Filter
+              </button>
+            </form>
+            <button
+              className="tableButton"
+              type="button"
+              onClick={downloadData}
+            >
+              Export as CSV
             </button>
-          </form>
-          <button className="tableButton" type="button" onClick={downloadData}>
-            Download CSV
-          </button>
+            <a style={{ display: "none " }} href="#" ref={dlRef}>
+              Export as CSV
+            </a>
+          </div>
         </div>
         {rushingStats.length === 0 ? (
           <div>No statistics were found!</div>
         ) : (
-          <div className={`rushStats${processing ? " loading" : ""}`}>
-            {COL_ORDER.map(renderHeaderCol)}
-            {rushingStats.map((playerStat, idx) => {
-              const rKey = `${playerStat.Player.replace(/\s/g, "")}-${idx}`;
-              return (
-                <TableRow
-                  key={rKey}
-                  playerStat={playerStat}
-                  colOrder={COL_ORDER}
-                  altBG={idx % 2 === 1}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div className={`rushStats${processing ? " loading" : ""}`}>
+              {COL_ORDER.map((column, idx, arr) => {
+                const rKey = `Header-${column.code}`;
+
+                let classes = "rushStats__header";
+                if (idx === 0) {
+                  classes += " rushStats__header--name";
+                } else if (idx === arr.length - 1) {
+                  classes += " rushStats__header--last";
+                }
+
+                const headerProps = {
+                  key: rKey,
+                  code: column.code,
+                  title: column.desc,
+                  classes
+                };
+
+                if (column.sortable) {
+                  headerProps.classes += " sortable";
+                  headerProps.setSorting = column.sortable.setState;
+                  if (sorting.by === column.code && sorting.order !== NONE) {
+                    headerProps.classes += ` ${sorting.order.toLowerCase()}`;
+                  }
+                }
+                return <TableHeader {...headerProps} />;
+              })}
+              {rushingStats.map((playerStat, idx) => {
+                const rKey = `${playerStat.Player.replace(/\s/g, "")}-${idx}`;
+                return (
+                  <TableRow
+                    key={rKey}
+                    playerStat={playerStat}
+                    colOrder={COL_ORDER}
+                    altBG={idx % 2 === 1}
+                  />
+                );
+              })}
+            </div>
+          </>
         )}
       </>
     );

@@ -9,13 +9,64 @@ $sortColorActive: #006dff;
 .table {
   &Heading {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
     margin: 24px 0;
+  }
 
-    &--title {
-      margin: 0 auto 0 0;
+  &Paginator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > div:nth-child(n + 1) {
+      margin-left: 16px;
     }
+
+    & .paginator {
+      &__changer {
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      &__indicator {
+        padding: 6px;
+        border: $borderColor;
+        border-radius: 4px;
+        background: none;
+        font-size: 1em;
+        width: 60px;
+        height: 34px;
+        border: $borderColor;
+        -moz-appearance: textfield;
+
+        &::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &CPPG {
+    padding: 6px;
+    border: $borderColor;
+    border-radius: 4px;
+    background: none;
+    font-size: 1em;
+    height: 34px;
+  }
+
+  &Actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &Filter {
@@ -27,8 +78,9 @@ $sortColorActive: #006dff;
       padding: 6px;
       border: $borderColor;
       border-radius: 4px;
-      background: #000;
+      background: none;
       font-size: 1em;
+      height: 34px;
     }
   }
 
