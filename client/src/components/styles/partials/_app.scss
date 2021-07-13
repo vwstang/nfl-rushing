@@ -1,18 +1,15 @@
-.wrapper {
-  margin: 0 auto;
-  max-width: $maxPageWidth;
-}
+.rushHeader {
+  background: #1e1f21;
 
-.rush {
-  &Header {
+  &__wrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: #1e1f21;
+    margin: 0 auto;
     padding: 24px;
+    max-width: $maxPageWidth;
   }
 
-  &Logo {
+  &__Logo {
     font-style: italic;
     font-weight: 700;
     font-size: 1.4em;
@@ -31,10 +28,22 @@
       }
     }
   }
+}
 
-  &Main {
-    margin: 0 auto;
-    padding: 0 24px 24px;
-    max-width: $maxPageWidth;
+.rushMain {
+  margin: 0 auto;
+  padding: 0 24px 24px;
+  max-width: $maxPageWidth;
+}
+
+.rushFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 auto;
+  padding: 0 24px;
+  max-width: $maxPageWidth;
+
+  & .challenger {
+    font-size: 12px;
   }
 }

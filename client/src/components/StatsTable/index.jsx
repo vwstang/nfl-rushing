@@ -19,6 +19,7 @@ const StatsTable = (props) => {
   const [rushingStats, setRushingStats] = useState([]);
   const [loading, setLoading] = useState(true); // Initial page load
   const [processing, setProcessing] = useState(false); // Sort or filter processing
+  const [downloading, setDownloading] = useState(false);
   const [errMsg, setErrMsg] = useState(null);
   const [filterName, setFilterName] = useState("");
   const [sorting, setSorting] = useState({ by: "", order: NONE });
@@ -80,7 +81,7 @@ const StatsTable = (props) => {
   ];
 
   const downloadData = async () => {
-    setProcessing(true);
+    setDownloading(true);
     const headers = {
       name: filterName,
       ...(sorting.order !== NONE && {
@@ -88,7 +89,6 @@ const StatsTable = (props) => {
       })
     };
     try {
-      // Fire and forget? Or loading state on download button
       const response = await axios.get("/utilities/rushingstats/getcsv", {
         headers
       });
@@ -106,7 +106,7 @@ const StatsTable = (props) => {
       );
       console.error(error);
     } finally {
-      setProcessing(false);
+      setDownloading(false);
     }
   };
 
@@ -145,14 +145,6 @@ const StatsTable = (props) => {
     getData();
   }, [sorting, countPerPage, page]);
 
-  // useEffect(() => {
-  //   if (pageCount < page) {
-  //     setPage(pageCount);
-  //     setTargetPage(pageCount);
-  //   } else {
-  //     setTargetPage(page);
-  //   }
-  // }, [page, countPerPage]);
   useEffect(() => {
     if (page !== targetPage) {
       setTargetPage(page);
@@ -172,7 +164,6 @@ const StatsTable = (props) => {
   } else {
     return (
       <>
-        <h1 className="title">NFL Rushing Statistics</h1>
         <div className="tableHeading">
           <div className="tablePaginator">
             <div>
@@ -245,11 +236,12 @@ const StatsTable = (props) => {
               </button>
             </form>
             <button
-              className="tableButton"
+              className={`tableButton${downloading ? " downloading" : ""}`}
               type="button"
               onClick={downloadData}
+              disabled={downloading}
             >
-              Export as CSV
+              {downloading ? "Downloading..." : "Export as CSV"}
             </button>
             <a style={{ display: "none " }} href="#" ref={dlRef}>
               Export as CSV

@@ -12,15 +12,19 @@ const App = () => {
   ) : (
     <>
       <header className="rushHeader">
-        <div className="wrapper">
-          <div className="rushLogo">
-            the<span className="rushLogo--R">R</span>ush
+        <div className="rushHeader__wrapper">
+          <div className="rushHeader__Logo">
+            the<span className="rushHeader__Logo--R">R</span>ush
           </div>
         </div>
       </header>
       <main className="rushMain">
+        <h1 className="title">NFL Rushing Statistics</h1>
         <StatsTable />
       </main>
+      <footer className="rushFooter">
+        <span className="challenger">Challenge by Vincent Tang</span>
+      </footer>
     </>
   );
 };

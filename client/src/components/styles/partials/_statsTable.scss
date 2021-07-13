@@ -19,7 +19,7 @@ $sortColorActive: #006dff;
     justify-content: center;
     align-items: center;
 
-    & > div:nth-child(n + 1) {
+    & > div:nth-child(n + 2) {
       margin-left: 16px;
     }
 
@@ -92,6 +92,11 @@ $sortColorActive: #006dff;
     background: #006dff;
     cursor: pointer;
     font-size: 1em;
+
+    &.downloading {
+      border: 1px solid #0051ff;
+      background: #0051ff;
+    }
   }
 
   &Header {
