@@ -2,7 +2,7 @@ import axios from "axios";
 
 const express = require("express");
 
-const apiUrl = process.env.API_URL || "http://localhost:3000";
+const apiUrl = process.env.API_URL || "http://localhost:8800";
 
 const utilities = express.Router();
 
