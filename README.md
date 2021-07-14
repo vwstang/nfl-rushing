@@ -4,17 +4,17 @@ At theScore, we are always looking for intelligent, resourceful, full-stack deve
 
 **All candidates must complete this before the possibility of an in-person interview. During the in-person interview, your submitted project will be used as the base for further extensions.**
 
-### Why a take-home challenge?
+## Why a take-home challenge?
 
 In-person coding interviews can be stressful and can hide some people's full potential. A take-home gives you a chance work in a less stressful environment and showcase your talent.
 
 We want you to be at your best and most comfortable.
 
-### A bit about our tech stack
+## A bit about our tech stack
 
 As outlined in our job description, you will come across technologies which include a server-side web framework (like Elixir/Phoenix, Ruby on Rails or a modern Javascript framework) and a front-end Javascript framework (like ReactJS)
 
-### Challenge Background
+## Challenge Background
 
 We have sets of records representing football players' rushing statistics. All records have the following attributes:
 
@@ -36,7 +36,7 @@ We have sets of records representing football players' rushing statistics. All r
 
 In this repo is a sample data file [`rushing.json`](/rushing.json).
 
-##### Challenge Requirements
+## Challenge Requirements
 
 1. Create a web app. This must be able to do the following steps
    1. Create a webpage which displays a table with the contents of [`rushing.json`](/rushing.json)
@@ -47,7 +47,7 @@ In this repo is a sample data file [`rushing.json`](/rushing.json).
 
 3. Update the section `Installation and running this solution` in the README file explaining how to run your code
 
-### Submitting a solution
+## Submitting a solution
 
 1. Download this repo
 2. Complete the problem outlined in the `Requirements` section
@@ -56,16 +56,30 @@ In this repo is a sample data file [`rushing.json`](/rushing.json).
 
 We will evaluate you on your ability to solve the problem defined in the requirements section as well as your choice of frameworks, and general coding style.
 
-### Help
+## Help
 
 If you have any questions regarding requirements, do not hesitate to email your contact at theScore for clarification.
 
-### Installation and running this solution
+## Installation and running this solution
 
-#### Requirements
+### Requirements
 
 - NodeJS v14.17.1+
 - Docker Engine v18.06.0+
+
+### Steps to running the application
+
+The solution is dockerized and can be started up with the following command from the project root:
+
+```bash
+docker-compose up -d
+```
+
+Once docker-compose finishes building and running all services, the application can then be accessed at http://localhost:3100.
+
+### Alternate steps to running the application
+
+In case the dockerized solution is unable to start up, the following steps manually starts up each service separately.
 
 #### Start the DB
 
@@ -86,8 +100,6 @@ npm install
 npm start
 ```
 
-Once the node server is up, the API server can be accessed at http://localhost:3000.
-
 #### Start the Client server
 
 Change directory from project root to client folder, install dependencies, run build script, and then start up the node server:
@@ -99,4 +111,4 @@ npm run build
 npm start
 ```
 
-Once the node server is up, the web app can then be accessed at http://localhost:3100.
+Finally, with everything up and running, the application can be accessed at http://localhost:3100.
