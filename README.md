@@ -75,7 +75,7 @@ The solution is dockerized and can be started up with the following command from
 docker-compose up -d
 ```
 
-Once docker-compose finishes building and running all services, the application can then be accessed at http://localhost:3100.
+Once docker-compose finishes building and running all services, the application can then be accessed at http://localhost:8888.
 
 ### Alternate steps to running the application
 
@@ -111,4 +111,4 @@ npm run build
 npm start
 ```
 
-Finally, with everything up and running, the application can be accessed at http://localhost:3100.
+Finally, with everything up and running, the application can be accessed at http://localhost:8888.
