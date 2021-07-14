@@ -2,7 +2,7 @@
 
 $rushStatusCols: 16;
 $borderColor: 1px solid #242628;
-$sortOffset: 3px;
+$sortOffset: 6px;
 $sortColor: #ffffff;
 $sortColorActive: #006dff;
 
@@ -146,7 +146,7 @@ $sortColorActive: #006dff;
       &::before {
         content: "\25B2";
         position: absolute;
-        font-size: 1px;
+        font-size: 0.6em;
         top: calc(50% - 12px);
         right: $sortOffset;
         color: $sortColor;
@@ -155,8 +155,8 @@ $sortColorActive: #006dff;
       &::after {
         content: "\25BC";
         position: absolute;
-        font-size: 1px;
-        top: 50%;
+        font-size: 0.6em;
+        top: calc(50% - 2px);
         right: $sortOffset;
         color: $sortColor;
       }
