@@ -20,7 +20,7 @@ const paginator = (recordset, targetpage, countperpage) => {
   const endIndex = (targetpage - 1) * countperpage + countperpage;
   return {
     recordsetpage: recordset.slice(startIndex, endIndex),
-    totalpages: Math.ceil(recordset.length / countperpage)
+    totalpages: Math.ceil(recordset.length / countperpage) || 0
   };
 };
 

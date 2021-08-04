@@ -71,6 +71,8 @@ const getRushingStats = async (qryParams, srtParams, page, cppg = 20) => {
     const paginator = require("../../utils/paginator");
     const result = paginator(rushArr, page, cppg);
     return { recordset: result.recordsetpage, totalpages: result.totalpages };
+  } else if (page === 0 && rushArr.length === 0) {
+    return { recordset: rushArr, totalpages: 0 };
   } else {
     return { recordset: rushArr };
   }

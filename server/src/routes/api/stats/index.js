@@ -17,7 +17,7 @@ stats.get("/rushing", async (req, res) => {
 
   const page = req.headers["r-page"]
     ? parseInt(req.headers["r-page"], 10)
-    : null;
+    : undefined; // In order to trigger falsy condition
 
   const cppg = req.headers["r-page-count"]
     ? parseInt(req.headers["r-page-count"], 10)

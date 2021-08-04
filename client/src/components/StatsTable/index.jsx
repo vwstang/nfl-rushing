@@ -120,7 +120,7 @@ const StatsTable = (props) => {
         sortorder: sorting.order
       }),
       countppg: countPerPage,
-      page
+      page: page ? page : 1
     };
     try {
       const response = await axios.get("/utilities/rushingstats", {
@@ -128,6 +128,9 @@ const StatsTable = (props) => {
       });
       setRushingStats(response.data.recordset);
       setPageCount(response.data.totalpages);
+      if (response.data.totalpages >= 1 && page === 0) {
+        setPage(1);
+      }
       setProcessing(false);
     } catch (error) {
       setErrMsg(
