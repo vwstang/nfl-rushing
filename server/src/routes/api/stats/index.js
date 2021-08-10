@@ -1,5 +1,8 @@
 const express = require("express");
-const { getRushingStats } = require("../../../controllers/services");
+const {
+  getRushingStats,
+  getTeamRushingStats
+} = require("../../../controllers/services");
 
 const stats = express.Router();
 
@@ -24,6 +27,12 @@ stats.get("/rushing", async (req, res) => {
     : undefined; // To trigger default parameter in getRushingStats
 
   const resData = await getRushingStats(queryParams, sortParams, page, cppg);
+
+  return res.send(resData);
+});
+
+stats.get("/team", async (req, res) => {
+  const resData = await getTeamRushingStats();
 
   return res.send(resData);
 });

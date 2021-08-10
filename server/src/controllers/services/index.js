@@ -76,4 +76,46 @@ const getRushingStats = async (qryParams, srtParams, page, cppg = 20) => {
   }
 };
 
-module.exports = { getRushingStats };
+const connectDB = async () => {
+  const rushCollection = (await connect("ts-nfl-rushing")).collection(
+    "RushingStats"
+  );
+
+  const rushCursor = await rushCollection.find(null, {
+    projection: { _id: 0 }
+  });
+
+  const allStats = await rushCursor.toArray();
+
+  return allStats;
+};
+
+const getTeamRushingStats = async () => {
+  const allStats = await connectDB();
+
+  return processTeamRushingStats(allStats);
+};
+
+const processTeamRushingStats = (allStats) => {
+  const teamStats = {};
+
+  for (const playerStat of allStats) {
+    let parsedYds = playerStat.Yds;
+    if (typeof parsedYds === "string") {
+      parsedYds = parseInt(playerStat.Yds.replace(/,/g, ""), 10);
+    }
+    if (teamStats[playerStat.Team]) {
+      teamStats[playerStat.Team] += parsedYds;
+    } else {
+      teamStats[playerStat.Team] = parsedYds;
+    }
+  }
+
+  return teamStats;
+};
+
+module.exports = {
+  getRushingStats,
+  processTeamRushingStats,
+  getTeamRushingStats
+};

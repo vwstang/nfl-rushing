@@ -2,10 +2,13 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: "./src/components/hydrate.js",
+  entry: {
+    team: "./src/components/hydrateTeam.js",
+    rushing: "./src/components/hydrate.js"
+  },
   output: {
     path: path.resolve(__dirname, "./public"),
-    filename: "rushing.js"
+    filename: "[name].js"
   },
   module: {
     rules: [

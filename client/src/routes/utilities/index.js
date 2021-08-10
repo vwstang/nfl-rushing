@@ -25,6 +25,17 @@ utilities.get("/rushingstats", async (req, res) => {
   }
 });
 
+utilities.get("/getteamstats", async (req, res) => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/stats/team`);
+    console.log(response.data);
+    return res.send(response.data);
+  } catch (error) {
+    console.error("[routes.utilities.get.getteamstats]", error);
+    return res.sendStatus(500);
+  }
+});
+
 utilities.get("/rushingstats/getcsv", async (req, res) => {
   try {
     const headers = {
